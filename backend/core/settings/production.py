@@ -10,7 +10,9 @@ DEBUG = False
 ALLOWED_HOSTS = [
 
     ".onrender.com",
-    "localhost"
+    "localhost",
+    "revenue-tracker-5l0b.onrender.com",
+    "revenue-tracker-sample.netlify.app"
     
 ]
 
