@@ -98,7 +98,7 @@ REST_FRAMEWORK = {
 }
 CORS_ALLOWED_ORIGINS = [
 
-    "https://your-netlify-site.netlify.app"
+    "https://revenue-tracker-sample.netlify.app"
 
 ]
 
