@@ -11,7 +11,7 @@ ALLOWED_HOSTS = [
 
     ".onrender.com",
     "localhost"
-
+    
 ]
 
 
