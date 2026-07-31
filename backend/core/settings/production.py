@@ -8,12 +8,9 @@ DEBUG = False
 
 
 ALLOWED_HOSTS = [
-
-    ".onrender.com",
-    "localhost",
-    "revenue-tracker-o9jl.onrender.com",
-    "revenue-tracker-sample.netlify.app"
-    
+    os.environ.get(
+        "RENDER_EXTERNAL_HOSTNAME"
+    ),
 ]
 
 
@@ -62,3 +59,7 @@ STATICFILES_STORAGE = (
     "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 )
+
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get("FRONTEND_URL")
+]
