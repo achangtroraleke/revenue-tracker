@@ -11,7 +11,7 @@ ALLOWED_HOSTS = [
 
     ".onrender.com",
     "localhost",
-    "revenue-tracker-5l0b.onrender.com",
+    "revenue-tracker-o9jl.onrender.com",
     "revenue-tracker-sample.netlify.app"
     
 ]
