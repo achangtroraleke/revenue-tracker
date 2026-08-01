@@ -29,7 +29,7 @@ export default function useDashboard({
           },
           signal,
         });
-
+        console.log(response.data)
         setDashboard(response.data);
       } catch (err) {
         if (
