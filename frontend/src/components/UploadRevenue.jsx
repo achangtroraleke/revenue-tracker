@@ -28,6 +28,7 @@ export default function UploadRevenue({ refresh }) {
       const res = await api.post("/upload/", formData);
 
       setStatus(res.data.message);
+      await refresh()
     } catch (err) {
       setStatus("Upload failed");
     } finally {
