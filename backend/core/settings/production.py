@@ -10,7 +10,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     os.environ.get(
         "RENDER_EXTERNAL_HOSTNAME"
-    ),
+    ),".onrender.com"
 ]
 
 
