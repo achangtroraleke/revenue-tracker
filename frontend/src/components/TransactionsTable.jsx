@@ -3,6 +3,7 @@ export default function TransactionsTable({
   setSearch,
 }) {
   const handleFilterClick = (value) => {
+    console.log(value)
     if (typeof setSearch !== "function") {
       console.error(
         "TransactionsTable expected setSearch to be a function."
