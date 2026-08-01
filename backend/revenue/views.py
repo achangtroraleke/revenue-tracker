@@ -125,16 +125,12 @@ class RevenueUploadView(APIView):
 
 class DashboardView(APIView):
     def get(self, request):
-        # Unfiltered data
-        base_queryset = RevenueEntry.objects.all()
-
-        # Separate queryset used only for the doughnut chart and table
-        filtered_queryset = base_queryset
+        queryset = RevenueEntry.objects.all()
 
         month_filter = request.GET.get("month", "").strip()
         search = request.GET.get("search", "").strip()
 
-        # Apply month only to filtered data
+        # Filter by month: YYYY-MM
         if month_filter:
             try:
                 selected_month = datetime.strptime(
@@ -152,104 +148,62 @@ class DashboardView(APIView):
                     status=400,
                 )
 
-            filtered_queryset = filtered_queryset.filter(
+            queryset = queryset.filter(
                 date__year=selected_month.year,
                 date__month=selected_month.month,
             )
 
-        # Apply category/client search only to filtered data
+        # Filter by category or client
         if search:
-            filtered_queryset = filtered_queryset.filter(
+            queryset = queryset.filter(
                 Q(category__icontains=search)
                 | Q(source_or_client__icontains=search)
             )
 
-        # ------------------------------------
-        # Unfiltered summary-card information
-        # ------------------------------------
-
+        # Aggregate total revenue
         total_revenue = (
-            base_queryset.aggregate(
+            queryset.aggregate(
                 total=Sum("amount")
             )["total"]
             or 0
         )
 
-        current_date = datetime.now()
-
-        monthly_revenue = (
-            base_queryset.filter(
-                date__year=current_date.year,
-                date__month=current_date.month,
-            ).aggregate(
-                total=Sum("amount")
-            )["total"]
-            or 0
+        # Revenue grouped by category
+        category_breakdown = list(
+            queryset
+            .values("category")
+            .annotate(total=Sum("amount"))
+            .order_by("-total")
         )
 
-        transaction_count = base_queryset.count()
-
-        # ------------------------------------
-        # Unfiltered monthly line chart
-        # ------------------------------------
-
+        # Revenue grouped by month
         monthly_revenue_chart = list(
-            base_queryset
+            queryset
             .annotate(month=TruncMonth("date"))
             .values("month")
             .annotate(total=Sum("amount"))
             .order_by("month")
         )
 
-        # ------------------------------------
-        # Filtered doughnut chart
-        # ------------------------------------
-
-        category_breakdown = list(
-            filtered_queryset
-            .values("category")
-            .annotate(total=Sum("amount"))
-            .order_by("-total")
-        )
-
-        # ------------------------------------
-        # Filtered transaction table
-        # ------------------------------------
-
-        recent_transactions = (
-            filtered_queryset
-            .order_by("-date", "-created_at")[:10]
-        )
+        # Latest 10 filtered transactions
+        recent_transactions = queryset.order_by(
+            "-date",
+            "-created_at",
+        )[:10]
 
         return Response(
             {
-                "filters": {
-                    "month": month_filter,
-                    "search": search,
-                },
-
-                # Unfiltered summary cards
+                "filter_month": month_filter,
+                "search": search,
                 "total_revenue": total_revenue,
-                "monthly_revenue": monthly_revenue,
-                "transaction_count": transaction_count,
-
-                # Filtered doughnut chart
+                "transaction_count": queryset.count(),
                 "category_breakdown": category_breakdown,
-
-                # Unfiltered monthly line chart
                 "monthly_revenue_chart": monthly_revenue_chart,
-
-                # Filtered table
                 "recent_transactions": (
                     RevenueEntrySerializer(
                         recent_transactions,
                         many=True,
                     ).data
-                ),
-
-                # Optional filtered count for display
-                "filtered_transaction_count": (
-                    filtered_queryset.count()
                 ),
             }
         )
