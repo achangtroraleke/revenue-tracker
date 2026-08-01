@@ -73,7 +73,7 @@ font-semibold
 mb-4
 "
       >
-        Monthly Revenue
+        Yearly Revenue
       </h2>
 
       <Line data={chartData} />
