@@ -102,7 +102,7 @@ mt-8
         >
           <RevenueCategoryChart data={dashboard.category_breakdown} />
 
-          <MonthlyRevenueChart data={dashboard.monthly_revenue_chart ?? []} />
+          <MonthlyRevenueChart data={dashboard.monthly_revenue_chart } />
         </div>
 
         {/* Filters */}
