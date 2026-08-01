@@ -8,6 +8,8 @@ import TransactionsTable from "./components/TransactionsTable";
 import MonthFilter from "./components/MonthFilter";
 import SearchFilter from "./components/SearchFilter";
 import CategoryList from "./components/CategoryList";
+import RevenueCategoryChart from './charts/RevenueCategoryChart';
+import MonthlyRevenueChart from './charts/MonthlyRevenueChart';
 
 import {
     filterTransactions
