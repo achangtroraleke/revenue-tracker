@@ -152,7 +152,7 @@ mt-8
         {/* Category Buttons */}
 
         <CategoryList
-          categories={dashboard.category_breakdown}
+          categories={dashboard.category_breakdown ?? []}
           setSearch={setSearch}
         />
 
