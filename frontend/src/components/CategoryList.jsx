@@ -15,6 +15,7 @@ export default function CategoryList({ categories, setSearch }) {
 flex
 gap-2
 flex-wrap
+p-4
 "
     >
       {categories.map((item) => (
