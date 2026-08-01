@@ -137,7 +137,35 @@ export default function App() {
 
                 />
 
+<div className="
+grid
+grid-cols-1
+md:grid-cols-2
+gap-6
+mt-8
+">
 
+
+<RevenueCategoryChart
+
+data={
+dashboard.category_breakdown
+}
+
+/>
+
+
+
+<MonthlyRevenueChart
+
+data={
+dashboard.monthly_revenue_chart
+}
+
+/>
+
+
+</div>
 
                 {/* Filters */}
 
@@ -172,8 +200,8 @@ export default function App() {
           </div>
         </div>
 
-
-
+          
+              
 
                 {/* Summary Cards */}
 
