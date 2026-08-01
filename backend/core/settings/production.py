@@ -34,6 +34,8 @@ DATABASES = {
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 
     "django.middleware.security.SecurityMiddleware",
 
