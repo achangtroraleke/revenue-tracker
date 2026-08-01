@@ -1,103 +1,88 @@
-export default function TransactionsTable({ transactions, setSearch }) {
+export default function TransactionsTable({
+  transactions = [],
+  setSearch,
+}) {
+  const handleFilterClick = (value) => {
+    if (typeof setSearch !== "function") {
+      console.error(
+        "TransactionsTable expected setSearch to be a function."
+      );
+      return;
+    }
 
-  if (!transactions) {
-    return (
-      <div
-        className="
-overflow-x-auto
-"
-      >
-        <table
-          className="
-w-full
-text-left
-"
-        >
-          {" "}
-          <thead>
-            <tr
-              className="
-border-b
-text-slate-500
-text-sm
-"
-            >
-              <th className="p-3">Date</th>
+    setSearch(String(value ?? "").trim());
+  };
 
-              <th>Category</th>
-
-              <th>Client</th>
-
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    );
-  }
   return (
-    <div
-      className="
-overflow-x-auto
-"
-    >
-      <table
-        className="
-w-full
-text-left
-"
-      >
+    <div className="overflow-x-auto">
+      <table className="w-full text-left">
         <thead>
-          <tr
-            className="
-border-b
-text-slate-500
-text-sm
-"
-          >
+          <tr className="border-b text-sm text-slate-500">
             <th className="p-3">Date</th>
-
-            <th>Category</th>
-
-            <th>Client</th>
-
-            <th>Amount</th>
+            <th className="p-3">Category</th>
+            <th className="p-3">Client</th>
+            <th className="p-3">Amount</th>
           </tr>
         </thead>
 
         <tbody>
-          {transactions.map((item) => (
-            <tr
-              key={item.id}
-              className="
-border-b
-hover:bg-slate-50
-"
-            >
-              <td className="p-3">{item.date}</td>
-
-              <td>{item.category}</td>
-              <td>
-<button
-  type="button"
-  onClick={() => setSearch(item.source_or_client)}
-  className="text-blue-600 hover:underline"
->
-  {item.source_or_client}
-</button>
-              </td>
-
+          {transactions.length === 0 ? (
+            <tr>
               <td
-                className="
-font-semibold
-text-green-600
-"
+                colSpan={4}
+                className="p-6 text-center text-slate-500"
               >
-                ${item.amount}
+                No transactions found.
               </td>
             </tr>
-          ))}
+          ) : (
+            transactions.map((item) => (
+              <tr
+                key={item.id}
+                className="border-b hover:bg-slate-50"
+              >
+                <td className="p-3">
+                  {item.date}
+                </td>
+
+                <td className="p-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleFilterClick(item.category)
+                    }
+                    className="cursor-pointer text-blue-600 hover:underline"
+                  >
+                    {item.category}
+                  </button>
+                </td>
+
+                <td className="p-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleFilterClick(
+                        item.source_or_client
+                      )
+                    }
+                    className="cursor-pointer text-blue-600 hover:underline"
+                  >
+                    {item.source_or_client}
+                  </button>
+                </td>
+
+                <td className="p-3 font-semibold text-green-600">
+                  {Number(item.amount).toLocaleString(
+                    "en-US",
+                    {
+                      style: "currency",
+                      currency: "USD",
+                    }
+                  )}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
