@@ -8,160 +8,108 @@ import TransactionsTable from "./components/TransactionsTable";
 import MonthFilter from "./components/MonthFilter";
 import SearchFilter from "./components/SearchFilter";
 import CategoryList from "./components/CategoryList";
-import RevenueCategoryChart from './charts/RevenueCategoryChart';
-import MonthlyRevenueChart from './charts/MonthlyRevenueChart';
-
-
+import RevenueCategoryChart from "./charts/RevenueCategoryChart";
+import MonthlyRevenueChart from "./charts/MonthlyRevenueChart";
+import useDebounce from "./hooks/useDebounce";
 
 export default function App() {
-    const [month, setMonth] = useState("");
-    const [search, setSearch] = useState("");
+  const [month, setMonth] = useState("");
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
 
-
-  const {
-    dashboard,
-    loading,
-    error,
-    refresh,
-  } = useDashboard({
+  const { dashboard, loading, error, refresh } = useDashboard({
     month,
-    search,
+    search: debouncedSearch,
   });
 
-
-
-
-
-    if (loading) {
-
-        return (
-
-            <div className="
+  if (loading) {
+    return (
+      <div
+        className="
                 min-h-screen
                 flex
                 items-center
                 justify-center
-            ">
-
-                <h1 className="
+            "
+      >
+        <h1
+          className="
                     text-xl
                     font-semibold
-                ">
+                "
+        >
+          Loading dashboard...
+        </h1>
+      </div>
+    );
+  }
 
-                    Loading dashboard...
-
-                </h1>
-
-            </div>
-
-        );
-
-    }
-
-
-
-    if (!dashboard) {
-
-        return (
-
-            <div className="
-                p-8
-            ">
-
-                No dashboard data available.
-
-            </div>
-
-        );
-
-    }
-
-
-
-
-
-
-
+  if (!dashboard) {
     return (
+      <div
+        className="
+                p-8
+            "
+      >
+        No dashboard data available.
+      </div>
+    );
+  }
 
-        <div className="
+  return (
+    <div
+      className="
             min-h-screen
             bg-slate-100
             p-8
-        ">
-
-
-            <div className="
+        "
+    >
+      <div
+        className="
                 max-w-7xl
                 mx-auto
-            ">
-
-
-                <h1 className="
+            "
+      >
+        <h1
+          className="
                     text-4xl
                     font-bold
                     text-slate-800
                     mb-2
-                ">
+                "
+        >
+          Revenue Tracker
+        </h1>
 
-                    Revenue Tracker
-
-                </h1>
-
-
-                <p className="
+        <p
+          className="
                     text-slate-500
                     mb-8
-                ">
+                "
+        >
+          Track revenue, clients, and business performance.
+        </p>
 
-                    Track revenue, clients, and business performance.
+        {/* Upload Excel */}
 
-                </p>
+        <UploadRevenue refresh={refresh} />
 
-
-
-                {/* Upload Excel */}
-
-                <UploadRevenue
-
-                    refresh={refresh}
-
-                />
-
-<div className="
+        <div
+          className="
 grid
 grid-cols-1
 md:grid-cols-2
 gap-6
 mt-8
-">
+"
+        >
+          <RevenueCategoryChart data={dashboard.category_breakdown} />
 
+          <MonthlyRevenueChart data={dashboard.monthly_revenue_chart} />
+        </div>
 
-<RevenueCategoryChart
+        {/* Filters */}
 
-data={
-dashboard.category_breakdown
-}
-
-/>
-
-
-
-<MonthlyRevenueChart
-
-data={
-dashboard.monthly_revenue_chart
-}
-
-/>
-
-
-</div>
-
-                {/* Filters */}
-
-
-                
         <div
           className="
                     mt-6
@@ -191,117 +139,70 @@ dashboard.monthly_revenue_chart
           </div>
         </div>
 
-          
-              
+        {/* Summary Cards */}
 
-                {/* Summary Cards */}
-
-                <div className="
+        <div
+          className="
                     mt-8
-                ">
+                "
+        >
+          <DashboardSummary data={dashboard} />
+        </div>
 
-                    <DashboardSummary
+        {/* Category Buttons */}
 
-                        data={dashboard}
+        <CategoryList
+          categories={dashboard.category_breakdown}
+          setSearch={setSearch}
+        />
 
-                    />
+        {/* Transactions */}
 
-                </div>
-
-
-
-
-
-                {/* Category Buttons */}
-
-                <CategoryList
-
-                    categories={
-                        dashboard.category_breakdown
-                    }
-
-                    setSearch={
-                        setSearch
-                    }
-
-                />
-
-
-
-
-
-                {/* Transactions */}
-
-                <div className="
+        <div
+          className="
                     mt-8
                     bg-white
                     rounded-xl
                     shadow-sm
                     p-6
-                ">
-
-
-                    <div className="
+                "
+        >
+          <div
+            className="
                         flex
                         justify-between
                         items-center
                         mb-4
-                    ">
-
-
-                        <h2 className="
+                    "
+          >
+            <h2
+              className="
                             text-xl
                             font-semibold
-                        ">
+                        "
+            >
+              Recent Transactions
+            </h2>
 
-                            Recent Transactions
-
-                        </h2>
-
-
-                        {
-                            search && (
-
-                                <button
-
-                                    onClick={() =>
-                                        setSearch("")
-                                    }
-
-                                    className="
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="
                                         text-sm
                                         text-blue-600
                                     "
+              >
+                Clear Filter
+              </button>
+            )}
+          </div>
 
-                                >
-
-                                    Clear Filter
-
-                                </button>
-
-                            )
-                        }
-
-
-                    </div>
-
-
-
- <TransactionsTable
-  transactions={dashboard.recent_transactions ?? []}
-  setSearch={setSearch}
-/>
-
-
-                </div>
-
-
-
-            </div>
-
-
+          <TransactionsTable
+            transactions={dashboard.recent_transactions ?? []}
+            setSearch={setSearch}
+          />
         </div>
-
-    );
-
+      </div>
+    </div>
+  );
 }
