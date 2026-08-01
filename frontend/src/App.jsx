@@ -129,10 +129,10 @@ mt-8
              justify-content
              align-content
                  "
-          >
+          >         <SearchFilter search={search} setSearch={setSearch} />
             <MonthFilter month={month} setMonth={setMonth}  />
 
-            <SearchFilter search={search} setSearch={setSearch} />
+   
           </div>
         </div>
 

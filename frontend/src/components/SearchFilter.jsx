@@ -6,7 +6,7 @@ export default function SearchFilter({ search, setSearch }) {
       className="
 p-4
 
-item-center flex
+w-full
 "
     >
       <div
