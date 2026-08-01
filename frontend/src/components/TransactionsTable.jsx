@@ -80,7 +80,7 @@ hover:bg-slate-50
               <td>{item.category}</td>
               <td>
                 <button
-                  onClick={() =>transactions.search(item.source_or_client)}
+                  onClick={() => setSearch(item.source_or_client)}
                   className="
 text-blue-600
 hover:underline

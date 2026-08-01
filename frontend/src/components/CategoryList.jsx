@@ -20,7 +20,7 @@ flex-wrap
       {categories.map((item) => (
         <button
           key={item.category}
-          onClick={() => setSearch(item.category)}
+          onClick={() => search(item.category)}
           className="
 bg-blue-100
 text-blue-700

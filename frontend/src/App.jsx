@@ -85,11 +85,7 @@ export default function App() {
         No API request happens here.
     */
 
-    const filteredTransactions =
-        filterTransactions(
-            dashboard.recent_transactions,
-            search
-        );
+    const filteredTransactions = filterTransactions(dashboard.recent_transactions,search);
 
 
 
