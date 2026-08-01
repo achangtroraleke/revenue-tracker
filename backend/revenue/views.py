@@ -1,29 +1,18 @@
-from django.shortcuts import render
+from datetime import datetime
 
-# Create your views here.
 import pandas as pd
 
-from django.db.models import Sum
+from django.db.models import Q, Sum
 from django.db.models.functions import TruncMonth
 
-from django.utils.timezone import now
-
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-
+from rest_framework.views import APIView
 
 from .models import RevenueEntry, UploadedFile
 from .serializers import (
+    RevenueEntrySerializer,
     UploadSerializer,
-    RevenueEntrySerializer
 )
-
-from datetime import datetime
-
-from django.db.models.functions import TruncMonth
-
-from django.db.models import Q, Sum
 
 class RevenueUploadView(APIView):
 
