@@ -64,3 +64,6 @@ STATICFILES_STORAGE = (
 CORS_ALLOWED_ORIGINS = [
     os.environ.get("FRONTEND_URL")
 ]
+CSRF_TRUSTED_ORIGINS = [
+    os.environ.get("FRONTEND_URL", "https://revenue-tracker-sample.netlify.app")
+]
