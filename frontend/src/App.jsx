@@ -17,7 +17,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
 
-  const { dashboard, loading, error, refresh } = useDashboard({month,search: debouncedSearch});
+  const { dashboard, loading, error, refresh } = useDashboard({ month, search: debouncedSearch });
 
   if (loading) {
     return (
