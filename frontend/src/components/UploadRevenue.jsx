@@ -74,7 +74,8 @@ border
 border-slate-300
 rounded-lg
 p-2
-bg-white
+bg-white'
+cursor-pointer
 "
       />
 
