@@ -14,7 +14,7 @@ import useDebounce from "./hooks/useDebounce";
 
 export default function App() {
   const [month, setMonth] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("Consulting");
   const debouncedSearch = useDebounce(search, 400);
 
   const { dashboard, loading, error, refresh } = useDashboard({ month, search: debouncedSearch });
