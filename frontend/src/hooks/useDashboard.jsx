@@ -9,44 +9,70 @@ export default function useDashboard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadDashboard = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
+  const loadDashboard = useCallback(
+    async (signal) => {
+      try {
+        setLoading(true);
+        setError("");
 
-      console.log("Fetching dashboard:", {
-        month,
-        search,
-      });
+        const normalizedSearch = search.trim();
 
-      const response = await api.get("/dashboard/", {
-        params: {
-          month: month || undefined,
-          search: search.trim() || undefined,
-        },
-      });
+        console.log("Dashboard request:", {
+          month,
+          search: normalizedSearch,
+        });
 
-      setDashboard(response.data);
-    } catch (err) {
-      console.error("Dashboard request failed:", err);
+        const response = await api.get("/dashboard/", {
+          params: {
+            month: month || undefined,
+            search: normalizedSearch || undefined,
+          },
+          signal,
+        });
 
-      setError(
-        err.response?.data?.error ||
-          "Unable to load dashboard."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [month, search]);
+        setDashboard(response.data);
+      } catch (err) {
+        if (
+          err.name === "CanceledError" ||
+          err.code === "ERR_CANCELED"
+        ) {
+          return;
+        }
+
+        console.error("Dashboard request failed:", err);
+
+        setError(
+          err.response?.data?.error ||
+            "Unable to load dashboard data."
+        );
+      } finally {
+        if (!signal?.aborted) {
+          setLoading(false);
+        }
+      }
+    },
+    [month, search]
+  );
 
   useEffect(() => {
-    loadDashboard();
+    const controller = new AbortController();
+
+    loadDashboard(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, [loadDashboard]);
+
+  const refresh = useCallback(async () => {
+    const controller = new AbortController();
+    await loadDashboard(controller.signal);
   }, [loadDashboard]);
 
   return {
     dashboard,
     loading,
     error,
-    refresh: loadDashboard,
+    refresh,
   };
 }
