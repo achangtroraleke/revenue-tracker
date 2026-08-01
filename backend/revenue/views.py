@@ -282,7 +282,7 @@ class DashboardView(APIView):
                 search,
 
             "total_revenue":
-        total_revenue,
+                total_revenue,
 
             "transaction_count":
                 queryset.count(),
@@ -297,7 +297,7 @@ class DashboardView(APIView):
 
             "recent_transactions":
                 RevenueEntrySerializer(
-                    queryset[:10],
+                    queryset[:25],
                     many=True
                 ).data
         })

@@ -11,26 +11,24 @@ import CategoryList from "./components/CategoryList";
 import RevenueCategoryChart from './charts/RevenueCategoryChart';
 import MonthlyRevenueChart from './charts/MonthlyRevenueChart';
 
-import {
-    filterTransactions
-} from "./utils/filterDashboard";
-
 
 
 export default function App() {
-
-
-    const {
-        dashboard,
-        loading,
-        refresh
-    } = useDashboard();
-
-
-
     const [month, setMonth] = useState("");
-
     const [search, setSearch] = useState("");
+
+
+  const {
+    dashboard,
+    loading,
+    error,
+    refresh,
+  } = useDashboard({
+    month,
+    search,
+  });
+
+
 
 
 
@@ -80,12 +78,7 @@ export default function App() {
 
 
 
-    /*
-        Local filtering.
-        No API request happens here.
-    */
 
-    const filteredTransactions = filterTransactions(dashboard.recent_transactions,search);
 
 
 
@@ -294,17 +287,10 @@ dashboard.monthly_revenue_chart
 
 
 
-                    <TransactionsTable
-
-                        transactions={
-                            filteredTransactions
-                        }
-
-                        setSearch={
-                            setSearch
-                        }
-
-                    />
+ <TransactionsTable
+  transactions={dashboard.recent_transactions ?? []}
+  setSearch={setSearch}
+/>
 
 
                 </div>

@@ -1,125 +1,43 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../api";
 
+export default function useDashboard({ month = "", search = "" } = {}) {
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-const CACHE_KEY = "revenue_dashboard_cache";
-const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
+  const loadDashboard = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
+      const response = await api.get("/dashboard/", {
+        params: {
+          // Axios excludes these when they are undefined.
+          month: month || undefined,
+          search: search.trim() || undefined,
+        },
+      });
 
-
-export default function useDashboard(){
-
-    const [dashboard, setDashboard] = useState(null);
-
-    const [loading,setLoading] = useState(true);
-
-
-
-    async function loadDashboard(force=false){
-
-
-        const cached =
-            localStorage.getItem(
-                CACHE_KEY
-            );
-
-
-        if(!force && cached){
-
-            const parsed =
-                JSON.parse(cached);
-
-
-            const expired =
-                Date.now()
-                -
-                parsed.timestamp
-                >
-                CACHE_TIME;
-
-
-
-            if(!expired){
-
-                setDashboard(
-                    parsed.data
-                );
-
-                setLoading(false);
-
-                return;
-
-            }
-
-        }
-
-
-
-        const response =
-            await api.get(
-                "/dashboard/"
-            );
-
-
-
-        const cacheData = {
-
-            timestamp:
-                Date.now(),
-
-            data:
-                response.data
-
-        };
-
-
-        localStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify(cacheData)
-        );
-
-
-
-        setDashboard(
-            response.data
-        );
-
-
-        setLoading(false);
-
+      setDashboard(response.data);
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+          "Unable to load dashboard data."
+      );
+    } finally {
+      setLoading(false);
     }
+  }, [month, search]);
 
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
 
-
-    function clearCache(){
-
-        localStorage.removeItem(
-            CACHE_KEY
-        );
-
-    }
-
-
-
-    useEffect(()=>{
-
-        loadDashboard();
-
-    },[]);
-
-
-
-    return {
-
-        dashboard,
-
-        loading,
-
-        refresh:
-            ()=>loadDashboard(true),
-
-        clearCache
-
-    };
-
+  return {
+    dashboard,
+    loading,
+    error,
+    refresh: loadDashboard,
+  };
 }
