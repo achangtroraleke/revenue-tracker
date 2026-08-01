@@ -21,6 +21,12 @@ export default function useDashboard({
           month,
           search: normalizedSearch,
         });
+        console.log("Dashboard request values:", {
+  month,
+  search,
+});
+
+console.trace("Dashboard API call source");
 
         const response = await api.get("/dashboard/", {
           params: {

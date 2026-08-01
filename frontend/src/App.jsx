@@ -14,7 +14,7 @@ import useDebounce from "./hooks/useDebounce";
 
 export default function App() {
   const [month, setMonth] = useState("");
-  const [search, setSearch] = useState("Consulting");
+  const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
 
   const { dashboard, loading, error, refresh } = useDashboard({ month, search: debouncedSearch });
@@ -130,7 +130,7 @@ mt-8
              align-content
                  "
           >
-            <MonthFilter month={month} setMonth={setMonth} clear={setSearch} />
+            <MonthFilter month={month} setMonth={setMonth}  />
 
             <SearchFilter search={search} setSearch={setSearch} />
           </div>

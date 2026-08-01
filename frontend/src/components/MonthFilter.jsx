@@ -34,7 +34,7 @@ md:w-64
 "
       />
       <button
-        onClick={clear("")}
+        onClick={setMonth("")}
         className="
 text-sm
 text-blue-600
