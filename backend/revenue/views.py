@@ -245,6 +245,32 @@ class DashboardView(APIView):
             .order_by("-total")
 
         )
+        # 
+        category_chart = list(
+
+            queryset
+            .values("category")
+            .annotate(
+                total=Sum("amount")
+            )
+            .order_by("-total")
+
+        )
+
+
+        monthly_chart = list(
+
+            queryset
+            .annotate(
+                month=TruncMonth("date")
+            )
+            .values("month")
+            .annotate(
+                total=Sum("amount")
+            )
+            .order_by("month")
+
+        )
 
 
         return Response({
@@ -256,15 +282,17 @@ class DashboardView(APIView):
                 search,
 
             "total_revenue":
-                total_revenue,
-
+        total_revenue,
 
             "transaction_count":
                 queryset.count(),
 
-
             "category_breakdown":
-                category_breakdown,
+                category_chart,
+
+
+            "monthly_revenue_chart":
+                monthly_chart,
 
 
             "recent_transactions":
@@ -272,5 +300,4 @@ class DashboardView(APIView):
                     queryset[:10],
                     many=True
                 ).data
-
         })

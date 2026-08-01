@@ -18,9 +18,7 @@ mb-2
 "
       >
         Filter by Month
-        
       </label>
-      
 
       <input
         type="month"
@@ -36,20 +34,15 @@ md:w-64
 "
       />
       <button
-
-onClick={clear('')}
-
-className="
+        onClick={clear("")}
+        className="
 text-sm
 text-blue-600
 mt-2
 "
-
->
-
-Clear Filter
-
-</button>
+      >
+        Clear Filter
+      </button>
     </div>
   );
 }

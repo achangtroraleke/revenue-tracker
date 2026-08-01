@@ -38,7 +38,7 @@ const HOVER_COLORS = [
 ];
 
 export default function RevenueCategoryChart({
-    data
+    data=[]
 }) {
 
 

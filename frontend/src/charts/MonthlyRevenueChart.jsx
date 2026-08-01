@@ -25,7 +25,7 @@ ChartJS.register(
   Legend,
 );
 
-export default function MonthlyRevenueChart({ data }) {
+export default function MonthlyRevenueChart({ data=[] }) {
   const chartData = {
     labels: data.map((item) =>
       new Date(item.month).toLocaleDateString("en-US", {
