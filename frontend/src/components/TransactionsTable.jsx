@@ -1,4 +1,5 @@
 export default function TransactionsTable({ transactions, setSearch }) {
+
   if (!transactions) {
     return (
       <div
@@ -79,7 +80,7 @@ hover:bg-slate-50
               <td>{item.category}</td>
               <td>
                 <button
-                  onClick={() => setSearch(item.source_or_client)}
+                  onClick={() =>transactions.search(transactions.source_or_client)}
                   className="
 text-blue-600
 hover:underline
